@@ -1,0 +1,164 @@
+###atur ip###
+nano /etc/network/interfaces
+	auto ens3
+	iface ens3 inet dhcp
+
+	auto ens4
+	iface ens4 inet static
+	address 192.168.1.2
+	netmask 24
+/etc/init.d/networking restart
+
+
+###buat 20 user###
+##buat user tanpa home##
+nano usertanpahome.sh
+	for i in {1..10}
+	do
+	useradd user$i
+	echo -e "smkbisa\nsmkbisa" | passwd user$i
+	done
+chmod +x usertanpahome.sh
+./usertanpahome.sh
+
+##buat user dengan home##
+nano userdenganhome.sh
+	for i in {11..20}
+	do
+	adduser user$i --disabled-password --gecos user$i
+	passwd user$i <<< "smkbisa"$'\n'"smkbisa"
+	done
+chmod +x userdenganhome.sh
+./userdenganhome.sh
+
+
+
+###DNS server###
+apt install bind9 dnsutils
+cd /etc/bind
+nano named.conf.local
+	zone "smkbisa.net" {
+		type master;
+		file "/etc/bind/db.domain";
+	};
+
+	zone "1.168.192.in-addr.arpa" {
+		type master;
+		file "/etc/bind/db.ip";
+	};
+nano named.conf.options
+	forwarders {
+		        8.8.8.8;
+		};
+	allow-query {any;};
+	dnssec-validation no;
+	dnssec-enable no;
+cp db.local db.domain
+cp db.127 db.ip
+nano db.domain
+	@       IN      NS      smkbisa.net.
+	@       IN      A       192.168.1.2
+	internal        IN      A       192.168.1.2
+	info    IN      A       192.168.1.2
+	@       IN      MX      10      mail.smkbisa.net.
+	mail    IN      A       192.168.1.2
+	router  IN      A       182.16.1.254
+	ftp     IN      A       192.168.1.2
+	ntp     IN      A       192.168.1.2
+	modul   IN      A       192.168.1.2
+nano db.ip
+	@       IN      NS      smkbisa.net.
+	2       IN      PTR     smkbisa.net.
+systemctl restart bind9
+
+
+
+###Web server###
+##virtual webpage user11-20##
+apt install apache2
+mkdir /home/user11/public_html
+mkdir /home/user12/public_html
+mkdir /home/user13/public_html
+mkdir /home/user14/public_html
+mkdir /home/user15/public_html
+mkdir /home/user16/public_html
+mkdir /home/user17/public_html
+mkdir /home/user18/public_html
+mkdir /home/user19/public_html
+mkdir /home/user20/public_html
+a2enmod userdir
+ (jika error UTF
+ 	export LANGUAGE=en_US.UTF-8
+	export LC_ALL=en_US.UTF-8
+	)
+systemctl restart apache2
+apt install w3m
+w3m http://smkbisa.net/~user11/
+
+##internal.smkbisa.net dengan authentikasi##
+cd /etc/apache2/sites-available/
+cp 000-default.conf internal.conf
+cp default-ssl.conf internal-ssl.conf
+mkdir /var/www/internal
+nano index.html
+nano internal.conf
+	ServerName internal.smkbisa.net
+        ServerAdmin webmaster@smkbisa.net
+        DocumentRoot /var/www/internal
+        <Directory /var/www/internal>
+        AuthType Basic
+        AuthName "Masukkan username dan password"
+        AuthUserFile /etc/apache2/htpasswd
+        Require valid-user
+        </Directory>
+nano internal-ssl.conf
+	ServerAdmin webmaster@smkbisa.net
+        DocumentRoot /var/www/internal
+        <Directory /var/www/internal>
+        AuthType Basic
+        AuthName "Masukkan username dan password"
+        AuthUserFile /etc/apache2/htpasswd
+        Require valid-user
+        </Directory>
+touch /etc/apache2/htpasswd
+htpasswd -b /etc/apache2/htpasswd user1 smkbisa
+htpasswd -b /etc/apache2/htpasswd user2 smkbisa
+htpasswd -b /etc/apache2/htpasswd user3 smkbisa
+htpasswd -b /etc/apache2/htpasswd user4 smkbisa
+htpasswd -b /etc/apache2/htpasswd user5 smkbisa
+htpasswd -b /etc/apache2/htpasswd user6 smkbisa
+htpasswd -b /etc/apache2/htpasswd user7 smkbisa
+htpasswd -b /etc/apache2/htpasswd user8 smkbisa
+htpasswd -b /etc/apache2/htpasswd user9 smkbisa
+htpasswd -b /etc/apache2/htpasswd user10 smkbisa
+systemctl restart apache2
+
+##Buat file index di modul,internal,indo##
+mkdir /var/www/modul
+mkdir /var/www/info
+nano /var/www/modul/index.html
+nano /var/www/info/index.html
+cd /etc/apache2/sites-available/
+cp 000-default.conf modul.conf
+cp 000-default.conf info.conf
+nano modul.conf
+	ServerName modul.smkbisa.net
+        ServerAdmin webmaster@smkbisa.net
+        DocumentRoot /var/www/modul
+nano info.conf
+nano internal.conf
+	ServerName info.smkbisa.net
+        ServerAdmin webmaster@smkbisa.net
+        DocumentRoot /var/www/info
+systemctl restart apache2
+
+
+
+###FTP Server###
+apt install proftpd
+
+
+
+###Mail Server###
+apt install courier-imap courier-pop
+

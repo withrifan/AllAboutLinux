@@ -1,0 +1,115 @@
+###LNXSRV###
+1. atur ip 
+- nano /etc/network/interfaces
+auto enp0s3
+iface enp0s3 inet static
+address 192.168.5.2
+netmask 30
+- /etc/init.d/networking restart
+
+2. buat user dengan /home 
+- nano userdenganhome.sh
+for i in {11..20}
+do
+adduser user$i --disabled-password --gecos user$i
+passwd user$i <<< "smkbisa"$'\n'"smkbisa"
+done
+-chmod +x userdenganhome.sh
+- ./userdenganhome.sh
+- cat /etc/passwd
+
+3. buat user tanpa /home
+- nano usertanpahome.sh
+for i in {1..10}
+do
+user add user$i
+echo -e "smkbisa\nsmkbisa" | passwd user$i
+done
+
+4. DNS server
+- apt-cdrom add
+- apt install bind9 dnsutils
+- cd /etc/bind
+- nano named.conf.local
+zone "smkbisa.net" {
+	type master;
+	file "/etc/bind/db.domain";
+};
+
+zone "5.168.192.in-addr.arpa' {
+	type master;
+	file "/etc/bind/db.ip";
+};
+
+- nano named.conf.options
+allow-query { any; };
+forwarders {
+  8.8.8.8;
+};
+dnssec-enable no;
+dnssec-validation no;
+
+- cp db.local db.domain
+- cp db.127 db.ip
+- nano db.domain
+@	IN	A	smkbisa.net.
+@	IN	A	192.168.5.2
+internal	IN	A	192.168.5.2
+info	IN	A	192.168.5.2
+@	IN	MX	10	mail.smkbisa.net.
+mail	IN	A	192.168.5.2
+router	IN	A	182.16.5.254
+ftp	IN	A	192.168.5.2
+ntp	IN	A	192.168.5.2
+modul	IN	A	192.168.5.2
+
+- nano db.ip
+@	IN	NS	smkbisa.net.
+2	IN	PTR	smkbisa.net.
+
+5. Web Server
+- apt install apache2
+- cd /etc/apache2/sites-available/
+- cp 000-default.conf smkbisa.conf
+- nano smkbisa.conf
+ServerName smkbisa.net
+- systemctl restart apache2
+
+6. Web Server (Virtual Web page) smkbisa.net
+- mkdir /home/user11/public_html
+sampai user20
+- a2enmod userdir
+- systemctl restart apache2
+
+7. Web Server authentikasi
+- mkdir /var/www/modul
+- nano /var/www/modul/index.html
+- mkdir /var/www/internal
+- nano /var/www/internal/index.html
+- mkdir /var/www/info
+- nano /var/www/info/index.html
+- cd /etc/apache2/sites-available
+- cp default-ssl.conf internalsmkbisa-ssl.conf
+- nano internalsmkbisa.conf
+dibawah Documment Root ditambahkan
+<Directory /var/www/internal>
+AuthType Basic
+AuthName "Masukkan Username dan Password"
+AuthUserFile /etc/apache2/htpasswd
+Require valid-user
+</Directory>
+- nano internalsmkbisa-ssl.conf
+dibawah Documment Root ditambahkan
+<Directory /var/www/internal>
+AuthType Basic1
+AuthName "Masukkan Username dan Password"
+AuthUserFile /etc/apache2/htpasswd
+Require valid-user
+</Directory>
+- touch /etc/apache2/htpasswd
+- htpasswd -b /etc/apache2/htpasswd user1 smkbisa
+sampai user10
+- systemctl restart apache2
+
+8. FTP Server
+-

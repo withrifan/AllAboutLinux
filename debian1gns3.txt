@@ -1,0 +1,124 @@
+debian10tes1 adapter1 nat, adapter2 hostonly
+w10 hostonly
+
+konfigurasi dhcp server
+- apt install isc-dhcp-server
+- cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.backup
+- nano /etc/dhcp/dhcpd.conf
+- # A slightly different configuration for an internal subnet.
+subnet 192.168.10.0 netmask 255.255.255.0 {
+  range 192.168.10.100 192.168.10.200;
+  option domain-name-servers 192.168.10.1;
+  option domain-name "contohdomain.com";
+  option routers 192.168.10.1;
+  option broadcast-address 192.168.10.255;
+  default-lease-time 600;
+  max-lease-time 7200;
+}
+- nano /etc/default/isc-dhcp-server
+- # On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACESv4="enp0s3"
+INTERFACESv6=""
+- systemctl restart isc-dhcp-server.service
+- systemctl status isc-dhcp-server.service 
+
+konfigurasi dns server
+- apt install bind9 dnsutils
+- # cp db.local db.domain
+# cp db.127 db.ip
+- nano named.conf.local
+-nano db.domain
+-nano db.ip
+- nano named.conf.options
+- nano /etc/resolv.conf
+
+konfigurasi web server
+- apt install apache2
+- systemctl status apache2
+- mkdir -p /var/www/your_domain
+- sudo chown -R $USER:$USER /var/www/your_domain
+- sudo chmod -R 755 /var/www/your_domain
+- nano /var/www/your_domain/index.html
+- sudo nano /etc/apache2/sites-available/your_domain.conf
+- <VirtualHost *:80>
+    ServerAdmin admin@your_email_domain
+    ServerName your_domain
+    ServerAlias www.your_domain
+    DocumentRoot /var/www/your_domain
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+- sudo a2ensite your_domain.conf
+- sudo a2dissite 000-default.conf
+- sudo systemctl restart apache2
+
+konfigurasi proxy server
+- apt install squid
+- systemctl status squid
+- cp /etc/squid/squid.conf{,.original}
+- nano /etc/squid/squid.conf
+- cari http_port 3128
+- # http_access deny all
+- cache_mgr debiansatu.com
+- visible_hostname debiansatu
+- hilangkan tanda pagar didepan cache_dir ufs /var/spool/squid 100 16 256
+- dan cache_mem 256mb
+- cari acl connect method connect
+- tambah acl local src 192.168.1.0/24
+acl bloklist dstdomain "/etc/squid/domain.txt"
+acl blokkey url_regex -i "/etc/squid/wordlist.txt"
+acl download urlpath_regex \.mp3$\.mp4$\.mkv$\.3gp$\.avi$
+
+http _access deny bloklist
+http_access deny blokkey
+http_access deny download
+http_access allow local
+- nano /etc/squid/domain.txt
+- isi dengan domain yg ingin diblokir .facebook.com
+- nano /etc/squid/wordlist.txt
+- isi dengan admin, local
+- tambah firewall nat
+iptables -t nat -A PREROUTING -i enp0s8 -p tcp -s 192.168.1.0/24 -m tcp --dport 80 -j REDIRECT --to-port 3128
+iptables -t nat -A PREROUTING -i enp0s8 -p udp -s 192.168.1.0/24 -m udp --dport 80 -j REDIRECT --to-port 3128
+- systemctl restart squid
+
+konfigurasi ntp server
+- apt install chrony
+- nano /etc/chrony/chrony.conf
+- server 0.id.pool.ntp.org
+server 1.id.pool.ntp.org
+server 2.id.pool.ntp.org
+server 3.id.pool.ntp.org
+
+allow 192.168.1.0/24
+- systemctl restart chrony
+- chronyc sources
+- ufw allow 123/udp
+
+konfigurasi samba server
+- apt install samba
+- nano /etc/samba/smb.conf
+[public]
+path = /samba/public
+browseable = yes
+writeable = no
+security = share
+guest ok = yes
+read only = yes
+
+[data]
+path = /samba/data
+browseable = yes
+writeable = yes
+security = user
+valid user = tkj
+guest ok = no
+read only = no
+- smbpasswd -a tkj
+- mkdir /samba
+- mkdir /samba/public
+- mkdir /samba/data
+- chmod -R 777 /samba/
+- nano /samba/public/file-percobaan.txt
+- systemctl restart smbd

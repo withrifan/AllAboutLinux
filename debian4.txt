@@ -1,0 +1,181 @@
+mikrotik adapter1 nat, adapter2 inet, adapter3 hostonly
+debiantes4 adapter1 intnet
+linux client adapter1 intnet
+windows10 host-only 
+
+konfigurasi mikrotik tes4
+- ip dhcp-client add interface=ether1 disable=no
+- ip add add add=192.168.10.1/24 interface=ether2 disable=no
+- ip add add add=192.168.2.1/24 interface=ether3 disable=no
+- ip dns set allow-remote-request=yes 
+- ip firewall nat add chain=srcnat out-interface=ether1 action=masquerade disable=no
+
+konfigurasi dns
+- apt install bind9 dnsutils
+- cp /etc/bind/db.local /etc/bind/db.domain
+- cp /etc/bind/db.127 /etc/bind/db.ip
+- nano named.conf.local
+zone "debianlima.com" {
+type master;
+file "/etc/bind/db.domain";
+};
+zone "10.168.192.in-addr.arpa" {
+type master;
+file "/etc/bind/db.ip";
+};
+- nano db.domain
+@	IN	A	debianlima.com.
+@	IN	A	192.168.10.2
+@	IN	MX	10	mail.debianlima.com
+mail	IN	A	192.168.10.2
+- nano db.ip
+2	IN	NS	debianlima.com.
+2	IN	PTR	debianlima.com.
+2	IN	PTR	mail.debianlima.com.
+- nano named.conf.options
+allow-query { any; };
+forwarders {
+  8.8.8.8;
+};
+dnssec-enable no;
+dnssec-validation no;
+- systemctl restart bind9
+- nano /etc/resolv.conf
+nameserver 192.168.10.2
+- nslookup debianlima.com
+- nslookup mail.debianlima.com
+
+konfigurasi webmail 
+- apt install mariadb-server
+- apt install apache2
+- apt install dovecot-imapd dovecot-pop3d postfix
+pilih internet site
+masukkan mail.debianempat.com
+- dpkg-reconfigure postfix
+pada force synchronous update pilih yes
+tambahkan 0.0.0.0/0
+pilih ipv4
+- nano /etc/postfix/main.cf
+tambahkan di paling bawah
+home_mailbox = Maildir/
+- nano /etc/dovecot/dovecot.conf
+listen = *
+- nano /etc/dovecot/conf.d/10-auth.conf
+disable_plaintext_auth = no
+-nano /etc/dovecot/conf.d/10-mail.conf
+hapus # di mail_location = maildir:~/Maildir
+dan beri tanda # di mail_location = mbox
+- maildirmake.dovecot /etc/skel/Maildir
+- systemctl restart postfix
+- systemctl restart dovecot
+- adduser tkjsatu
+- adduser tkjdua
+- apt install roundcube
+- mysql -u root -p
+- grant all privileges on roundcube.* to tkj@mail.debianempat.com identified by ‘tkj’;
+- flush privileges;
+- quit; 
+- mencoba kirim mail dari tkjsatu ke tkjdua
+telnet mail.debianempat.com 25
+mail from: tkjsatu@mail.debianempat.com
+rcpt to: tkjdua@mail.debianempat.com
+data
+coba lagi
+.
+quit
+- melihat email dari tkjdua
+telnet mail.debianempat.com 110
+user tkjdua
+pass 2
+retr 1
+quit
+- apt install roundcube
+- nano /etc/roundcube/config.inc.php
+masukkan domain dan ip serta hapus isi dari smtp user
+- cd /etc/apache2/sites-available
+- cp 000-default.conf webmail.conf
+- nano webmail.conf
+servername mail.debianempat.com
+documentroot /var/lib/roundcube
+- a2ensite webmail.conf
+- systemctl restart apache2
+- systemctl restart postfix
+- systemctl restart dovecot
+- buka browser mail.debianempat.com
+
+konfigurasi ssh keypair
+- apt install openssh-server
+- masuk ke client 
+ssh-keygen -t rsa
+- tekan enter atau kosongi passwordnya
+- copy dari client ke server
+ssh-copy-id tkj@192.168.10.2 (ipnya server)
+- remote client ke server
+ssh tkj@192.168.10.2
+
+konfigurasi ntp server
+- apt install ntp ntpdate
+- nano /etc/ntp.conf
+server 127.127.1.0
+fudge 127.127.1.0 stratum 1
+dan tambahkan pada cryptographically authenticated
+restrict 192.168.10.0 mask 255.255.255.0 nomodify notrap
+- systemctl restart ntp
+- pengujian ketik ntpq -pn
+- ntpdate -u 192.168.10.1 (diatur di client, ip nya server)
+
+konfigurasi samba server
+- apt install samba
+- mkdir /samba
+- mkdir /samba/public
+- mkdir /samba/data
+- chmod -R 777 /samba/
+- smbpasswd -a tkj
+- nano /etc/samba/smb.conf
+[public]
+path = /samba/public
+browseable = yes
+writeable = yes
+security = share
+guest ok = yes
+read only = no
+
+[data]
+path = /samba/data
+browseable = yes
+writeable = no
+security = user
+valid user = tkj
+guest ok = no
+read only = yes
+#melarang file bertipe html
+veto files =*html
+- nano /samba/public/file-percobaan.txt
+- systemctl restart smbd
+- remote dari client smb://192.168.10.2
+
+konfigurasi ftp server
+- apt install proftpd
+- remote pakai filezila
+- mkdir /ftpuser
+- nano /ftpuser/file.txt
+- chmod 777 /ftpuser
+- nano /etc/proftpd/proftpd.conf
+- edit server name menjadi debianempat.com
+- ganti portnya 201 (opsional)
+- hapus # di default root dan edit directory /ftpuser/
+- hapus # pada <Anonymous /ftpuser>
+- hapus # pada user dan group
+- hapus # pada UserAlias
+- hapus # pada RequireValidShell
+- hapus # pada </Anonymous>
+- systemctl restart proftpd
+
+konfigurasi web server
+- apt install apache2
+- ls /etc/apache2/sites-available/
+- cp 000-default.conf webmail.conf
+- nano webmail.conf
+- ubah servername, ganti /var/www/index.html /var/lib/roundcube
+- a2ensite webmail.conf
+- systemctl restart apache2

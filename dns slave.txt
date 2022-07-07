@@ -1,0 +1,9 @@
+type master;
+allow-transfer {172.16.2.2;};
+also-notify {172.16.2.2;};
+nameserver 172.16.1.2;
+
+type slave;
+masters {172.16.1.2;};
+nameserver 172.16.2.2;
+nameserver 172.16.1.2;

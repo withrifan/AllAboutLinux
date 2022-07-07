@@ -1,0 +1,48 @@
+konfigurasi dns master
+- apt install bind9 dnsutils
+- cd /etc/bind/
+- nano named.conf.local
+zone "debiandelapan.com" {
+	type master;
+	file "/etc/bind/db.domain";
+	allow-transfer {192.168.20.2;};
+	also-notify {192.168.20.2;};
+};
+
+zone "20.168.192.in-addr.arpa" {
+	type master;
+	file "/etc/bind/db.ip";
+	allow-transfer {192.168.20.2;};
+	also-notify {192.168.20.2;};
+};
+- nano named.conf.options
+allow-query { any; };
+forwarders {
+  8.8.8.8;
+};
+dnssec-enable no;
+dnssec-validation no;
+- nano db.domain
+@	IN	A	debiandelapan.com.
+@	IN	A	192.168.10.2
+@	IN	MX	10	mail.debiandelapan.com.
+mail	IN	A	192.168.10.2
+www	IN	A	192.168.10.2
+- nano db.ip
+@	IN	NS	debiandelapan.com.
+2	IN	PTR	debiandelapan.com.
+- systemctl restart bind9
+- nano /etc/resolv.conf
+nameserver 192.168.20.2
+
+konfigurasi dns slave
+- apt install bind9 dnsutils
+- nano /etc/bind/named.conf.local
+zone "debiandelapan.com" {
+	type slave;
+	masters {192.168.10.2;};
+};
+- systemctl restart bind9
+- nano /etc/resolv.conf
+nameserver 192.168.20.2
+nameserver 192.168.10.2
