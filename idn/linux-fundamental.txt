@@ -1,0 +1,8 @@
+rifan@debianku~$
+rifan : nama user debian
+whoami : cek user yg login
+debian : hostname/nama komputer dalam jaringan komputer
+hostnamectl : cek hostname
+~ : home direktori
+pwd : cek lokasi direktori
+cd : pindah lokasi direktori
