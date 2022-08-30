@@ -77,8 +77,13 @@ rmdir : hanya bisa menghapus direktori yg kosong
 rm -rf dir1 : menghapus direktori yg ada isinya
 
 
+Wildcard : simbol yg mewakili karakter lain
+* (asterix): representasi 0 / semua karakter
+? : representasi single akrakter
+{} (kurung kurawal) : representasi range sebuah karakter
 
-  
+touch file{1..10}.txt
+
   
   
   
