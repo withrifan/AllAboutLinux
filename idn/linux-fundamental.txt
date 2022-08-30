@@ -5,4 +5,83 @@ debian : hostname/nama komputer dalam jaringan komputer
 hostnamectl : cek hostname
 ~ : home direktori
 pwd : cek lokasi direktori
-cd : pindah lokasi direktori
+cd /namadirektori/ : pindah lokasi direktori
+cat : melihat isi file
+cat /var/log/syslog : melihat proses berjalan (hanya root)
+
+
+sudo su - dan sudo -i : login ke root dan direktori /root/
+su : masuk root dan direktori /home/user/
+su rifan : login user rifan melalui root
+sudo passwd : atur password root
+
+
+Direktori
+/ (root) : direktori utama
+  - bin/
+  - usr/ : direktori aplikasi yg diinstall (kalau windows program files)
+    -- bin/
+    -- lib/
+    -- local/
+    -- sbin/
+  - var/
+  - etc/ : direktori file konfigurasi server
+  - lib/
+  - media/
+  - home/ : home direktori setiap user
+    -- rifan/
+  - tmp/
+  - root/ : home direktori user root
+  - dev/
+  - boot/
+  - lib/
+  - lib32/
+  - lib64/
+  - libx32/
+  - opt/
+  - mnt/ 
+  - run/
+  - sbin/
+  - proc/
+  - srv/
+  - sys/
+  
+  
+Absolute Path : nama direktorinya dimulai dari / (root)
+Relative Path : dimulai dari direktori yg sekarang dibuka
+  
+
+cd ~ : pindah direktori home
+ls . : titik menunjukkan curent direktori
+cd .. : pindah ke parent direktori
+cd : pindah ke home direktori
+touch file.txt : membuat file txt
+
+
+ls -l : menampilkan detail suatu file/direktori
+ls -a : menampilkan file/direktori yg disembunyikan
+ls -R : menampilkan semua direktori dan isi direktori
+ls -R namadir: menampilkan semua isi direktori namadir
+mkdir : membuat direktori
+mkdir -p dir1/dir2/dir3 : membuat direktori sekaligus
+cp asal tujuan : copy file
+cp Documents/file.txt . : copy file ke curent direktori
+cp 1.txt 2.txt 3.txt dir1 : copy banyak file txt ke direktori dir1
+cp *.txt dir2 : copy semua file txt ke direktori dir2
+cp -r dir1 dir2 : copy direktori dir1 ke dir2
+mv : memindah file
+mv dir1/dir2/file.txt fileku.txt : memindah file.txt ke curent direktori dan mengganti namanya
+rm : remove file
+rm a* : semua file yg diawali huruf a akan dihapus
+rmdir : hanya bisa menghapus direktori yg kosong
+rm -rf dir1 : menghapus direktori yg ada isinya
+
+
+
+  
+  
+  
+  
+  
+  
+  
