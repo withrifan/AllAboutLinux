@@ -1,0 +1,33 @@
+# tasks file for quiz-roles
+- name: Install apache2
+  apt:
+    name: apache2
+    state: latest
+
+- name: Ensure apache2 is started and enabled
+  service:
+    name: apache2
+    state: started
+    enabled: true
+
+- name: template module quiz-roles.conf
+  template:
+    src: quiz-roles.conf.j2
+    dest: /etc/apache2/sites-available/quiz-roles.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable quiz-roles.conf
+  command: a2ensite quiz-roles.conf
+  notify:
+    - restart apache2
+
+- name: Disable 000-defaults.conf
+  command: a2dissite 000-default.conf
+  notify:
+    - restart apache2
+- name: Copy HTML content
+  copy:
+    src: html-quiz/
+    dest: "/var/www/quiz-roles/{{ ansible_hostname }}"

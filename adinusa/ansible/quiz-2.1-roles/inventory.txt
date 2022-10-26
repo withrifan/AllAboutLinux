@@ -1,0 +1,3 @@
+[managed]
+pod-aanachrifan-managed1
+pod-aanachrifan-managed2
