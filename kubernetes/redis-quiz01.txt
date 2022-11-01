@@ -1,0 +1,37 @@
+nano redis-quiz01.yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-quiz01
+  labels:
+    name: redis-quiz01
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: redis-quiz01
+  template:
+    metadata:
+      labels:
+        name: redis-quiz01
+    spec:
+      subdomain: replica
+      containers:
+      - name: redis-aanachrifan-quiz01
+        image: redis:latest
+        command:
+          - "redis-server"
+        args:
+          - "--slaveof"
+          - "primary.default.svc.cluster.local"
+          - "6379"
+          - "--protected-mode"
+          - "no"   
+        ports:
+        - containerPort: 6379
+
+
+kubectl apply -f redis-quiz01.yaml
+kubectl get deployments
+kubectl get pods
