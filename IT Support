@@ -1,2 +1,0 @@
-# Cek file size & mengurutkan dari terbesar ke terkecil
-sudo du -a /home | sort -n -r | head -n 5
