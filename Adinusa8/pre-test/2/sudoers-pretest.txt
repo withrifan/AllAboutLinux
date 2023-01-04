@@ -1,0 +1,5 @@
+adduser pretest
+sudo nano /etc/sudoers.d/pretest
+pretest ALL=(ALL:ALL) ALL
+%sudo   ALL=(ALL:ALL) ALL
+sudo login pretest
