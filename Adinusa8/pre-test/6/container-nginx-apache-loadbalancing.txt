@@ -31,3 +31,4 @@ sudo nano /etc/haproxy/haproxy.cfg
 sudo haproxy -c -f /etc/haproxy/haproxy.cfg
 sudo systemctl restart haproxy
 curl 10.10.10.11
+curl 10.10.10.11:123/stats
