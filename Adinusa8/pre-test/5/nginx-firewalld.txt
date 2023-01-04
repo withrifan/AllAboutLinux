@@ -1,0 +1,10 @@
+sudo apt update
+sudo apt install nginx
+sudo mkdir /var/www/html/lab05
+sudo nano /var/www/html/lab05/index.html
+sudo nano /etc/nginx/sites-available/default
+sudo systemctl restart nginx
+sudo apt install firewalld
+sudo firewall-cmd --permanent --zone=public --add-port=8090/tcp
+sudo firewall-cmd --reload
+sudo firewall-cmd --list-all
