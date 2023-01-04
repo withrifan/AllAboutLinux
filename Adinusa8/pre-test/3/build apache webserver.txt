@@ -1,0 +1,9 @@
+ sudo nano /etc/apt/sources.list
+	deb http://archive.ubuntu.com/ubuntu jammy main restricted
+	deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted
+ sudo apt update
+ sudo apt install apache2
+ sudo mkdir /var/www/html/pretest/
+ sudo nano /var/www/html/pretest/index.html
+ sudo nano /etc/apache2/sites-available/000-default.conf
+ sudo systemctl restart apache2
