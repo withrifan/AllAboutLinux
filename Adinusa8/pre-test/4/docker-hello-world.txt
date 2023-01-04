@@ -1,0 +1,6 @@
+sudo docker run -d -p 80:80 --name aanachrifan-pretest4 dockercloud/hello-world
+sudo docker images
+sudo docker container ls
+sudo docker container ps --all
+ssh student@lab2.adinusa.id -p 22 -D 5000
+curl 10.10.10.11
