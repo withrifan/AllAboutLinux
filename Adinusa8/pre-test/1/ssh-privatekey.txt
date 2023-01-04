@@ -1,0 +1,4 @@
+mkdir aanachrifan
+nano /home/student/aanachrifan/pretest.pem
+sudo chmod -R 600 aanachrifan/pretest.pem
+ssh challenge@lab2.adinusa.id -p 2279 -i /home/student/aanachrifan/pretest.pem
