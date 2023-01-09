@@ -1,2 +1,0 @@
-deb http://mirror.zol.co.zw/mariadb/repo/10.9/ubuntu jammy main
-deb-src http://mirror.zol.co.zw/mariadb/repo/10.9/ubuntu jammy main

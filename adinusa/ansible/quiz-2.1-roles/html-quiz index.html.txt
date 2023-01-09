@@ -1,3 +1,0 @@
-nano roles/quiz-roles/files/html-quiz/index.html
-
-adinusa lab quiz roles - aanachrifan
