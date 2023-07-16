@@ -1,4 +1,4 @@
-## Debian
+## Debian/Ubuntu
 run 32bit C program in 64bit device
 
     sudo dpkg --add-architecture i386
