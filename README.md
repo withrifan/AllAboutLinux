@@ -1,8 +1,8 @@
-# linux-notes
-This is a special repository for Linux commands
+This is a special repository for Linux Configuration
 
-## Fundamental
-Restart DHCP client interface
-
-    sudo dhclient -r enp0s3
-    sudo dhclient enp0s3
+- [Debian](debian)
+- [Ubuntu](ubuntu)
+- [Fedora](fedora)
+- [WSL](wsl)
+- [Termux](termux)
+- [Repository](repository)
