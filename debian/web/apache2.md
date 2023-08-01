@@ -1,87 +1,61 @@
 ## Apache2 Web Server
 
-Install Apache2 in Ubuntu
+install Apache2 in Debian
 
     apt install apache2
+    apachectl -V
 
-## VirtalHost
+## Create VirtualHosts
 
-    mkdir -p /var/www/your_domain
-    sudo chown -R $USER:$USER /var/www/your_domain
-    sudo chmod -R 755 /var/www/your_domain
-    nano /var/www/your_domain/index.html
+virtualhost for domain example.id
 
-    sudo nano /etc/apache2/sites-available/your_domain.conf
+    mkdir /var/www/example
+    chown -R www-data:www-data /var/www/example
+    nano /var/www/example/index.html
+    cd /etc/apache2/sites-available/
+    cp 000-default.conf example.conf
+    nano example.conf
+
         <VirtualHost *:80>
-            ServerAdmin admin@your_email_domain
-            ServerName your_domain
-            ServerAlias www.your_domain
-            DocumentRoot /var/www/your_domain
-            ErrorLog ${APACHE_LOG_DIR}/error.log
-            CustomLog ${APACHE_LOG_DIR}/access.log combined
+            ServerAdmin admin@example.id
+            ServerName example.id
+            ServerAlias www.example.id
+            DocumentRoot /var/www/example
         </VirtualHost>
 
-## virtual webpage user11-20##
+    a2dissite 000-default.conf
+    sudo a2ensite example.conf
+    sudo systemctl reload apache2
 
-apt install apache2
-mkdir /home/user11/public_html
-mkdir /home/user12/public_html
-mkdir /home/user13/public_html
-mkdir /home/user14/public_html
-mkdir /home/user15/public_html
-mkdir /home/user16/public_html
-mkdir /home/user17/public_html
-mkdir /home/user18/public_html
-mkdir /home/user19/public_html
-mkdir /home/user20/public_html
-a2enmod userdir
-(jika error UTF
-export LANGUAGE=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
-)
-systemctl restart apache2
-apt install w3m
-w3m http://smkbisa.net/~user11/
+## Apache Userdir
 
-## httpasswd
+configure apache2 userdir
 
-##internal.smkbisa.net dengan authentikasi##
-cd /etc/apache2/sites-available/
-cp 000-default.conf internal.conf
-cp default-ssl.conf internal-ssl.conf
-mkdir /var/www/internal
-nano index.html
-nano internal.conf
-ServerName internal.smkbisa.net
-ServerAdmin webmaster@smkbisa.net
-DocumentRoot /var/www/internal
-<Directory /var/www/internal>
-AuthType Basic
-AuthName "Masukkan username dan password"
-AuthUserFile /etc/apache2/htpasswd
-Require valid-user
-</Directory>
-nano internal-ssl.conf
-ServerAdmin webmaster@smkbisa.net
-DocumentRoot /var/www/internal
-<Directory /var/www/internal>
-AuthType Basic
-AuthName "Masukkan username dan password"
-AuthUserFile /etc/apache2/htpasswd
-Require valid-user
-</Directory>
-touch /etc/apache2/htpasswd
-htpasswd -b /etc/apache2/htpasswd user1 smkbisa
-htpasswd -b /etc/apache2/htpasswd user2 smkbisa
-htpasswd -b /etc/apache2/htpasswd user3 smkbisa
-htpasswd -b /etc/apache2/htpasswd user4 smkbisa
-htpasswd -b /etc/apache2/htpasswd user5 smkbisa
-htpasswd -b /etc/apache2/htpasswd user6 smkbisa
-htpasswd -b /etc/apache2/htpasswd user7 smkbisa
-htpasswd -b /etc/apache2/htpasswd user8 smkbisa
-htpasswd -b /etc/apache2/htpasswd user9 smkbisa
-htpasswd -b /etc/apache2/htpasswd user10 smkbisa
-systemctl restart apache2
+    a2enmod userdir
+    adduser user1
+    mkdir /home/user1/public_html
+    nano /home/user1/public_html/index.html
+
+check with
+
+    http://example.id/~user1/
+
+## Basic Authentication of HTTP users
+
+add script in example.conf
+
+    nano /etc/apache2/sites-available/example.conf
+
+    <Directory /var/www/example>
+    AuthType Basic
+    AuthName "restricted"
+    AuthUserFile /etc/apache2/.htpasswd
+    Require valid-user
+    </Directory>
+
+add htpasswd for user rifan
+
+    htpasswd -c /etc/apache2/.htpasswd rifan
 
 ## Reverse Proxy
 

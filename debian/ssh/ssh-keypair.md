@@ -1,18 +1,14 @@
-konfigurasi ssh keypair
+## SSH Keypair
 
-- apt install openssh-server
-- masuk ke client
-  ssh-keygen -t rsa
-- tekan enter atau kosongi passwordnya
-- copy dari client ke server
-  ssh-copy-id tkj@192.168.10.2 (ipnya server)
-- remote client ke server
-  ssh tkj@192.168.10.2
+generate ssh keygen with RSA keys in client
 
-konfigurasi ssh keypair
+    apt install openssh-server
+    ssh-keygen -t rsa
 
-- apt install openssh-server
-- buka client
-  ssh-keygen -t rsa
-  kosongin passpharse
-- ssh-copy-id tkj@192.168.10.2
+copy from client to server
+
+    ssh-copy-id -i ~/.ssh/id_rsa.pub -p 2222 rifan@192.168.1.254 (IP server)
+
+remote server
+
+    ssh rifan@192.168.1.254 -p 2222
