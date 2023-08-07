@@ -81,33 +81,6 @@ Edit ports.conf
         Listen 443
     </IfModule>
 
-## Webmail
-
-konfigurasi web server
-
-- apt install apache2
-- ls /etc/apache2/sites-available/
-- cp 000-default.conf webmail.conf
-- nano webmail.conf
-- ubah servername, ganti /var/www/index.html /var/lib/roundcube
-- a2ensite webmail.conf
-- systemctl restart apache2
-
-konfigurasi web
-
-- apt install apache2
-- cd /etc/apache2/sites-available
-- cp 000-default.conf website.conf
-- nano website.conf
-  servername www.debianenam.com
-  serveradmin webmaster@debianenam.com
-  documentroot /var/www/web
-- mkdir/var/www/web/
-- nano index.html
-- cd /etc/apache2/sites-available
-- a2ensite website.conf
-- systemctl restart apache2
-
 ## Restart Apache2
 
     sudo a2ensite your_domain.conf

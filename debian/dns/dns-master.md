@@ -2,9 +2,10 @@
 
 Configure DNS Server Bind9
 
-- apt install bind9 dnsutils
-- cp /etc/bind/db.local /etc/bind/db.domain
-- cp /etc/bind/db.127 /etc/bind/db/ip
+    apt install bind9 dnsutils
+    cp /etc/bind/db.local /etc/bind/db.domain
+    cp /etc/bind/db.127 /etc/bind/db.ip
+
 - nano named.conf.local
   zone "debiandua.com" {
   type master;
