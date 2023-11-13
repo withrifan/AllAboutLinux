@@ -13,7 +13,7 @@ Import Ubuntu-22.04 file tar
 
 Change default user Ubuntu-22.04
 
-    wsl --import Ubuntu-22.04 z:\wsl\Ubuntu-22.04 z:\Ubuntu-22.04.tar
+    ubuntu2204.exe config --default-user rifan
 
 ## Debian/Ubuntu
 run 32bit C program in 64bit device
