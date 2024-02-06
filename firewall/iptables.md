@@ -1,8 +1,22 @@
-Input Rules
+# Iptables
+Perintah Iptables untuk mengizinkan port/service yang diperlukan dan memblokir semua port yang tidak diperlukan.
+## Input Rules
+Rules untuk mengelola trafik yang masuk ke Linux Server 
 
-    -A INPUT -i lo -j ACCEPT
-    -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+Mengizinkan input dari interface Loopback
+
+    iptables -A INPUT -i lo -j ACCEPT
+
+Mengizinkan input dari trafik yang sudah ada & terkait
+
+    iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
+Mengizinkan input untuk protokol ICMP (ping)
+    
     -A INPUT -p icmp -j ACCEPT
+
+Mengizinkan input untuk service DNS dengan port udp
+    
     -A INPUT -p udp -m udp --dport 53 -j ACCEPT
     -A INPUT -p tcp -m multiport --dports 49152:65534 -j ACCEPT
     -A INPUT -p tcp -m multiport --dports 80,443 -j ACCEPT
