@@ -15,7 +15,7 @@ Rules untuk mengelola trafik yang masuk ke Linux Server
     
     iptables -A INPUT -p icmp -j ACCEPT
 
-### Mengizinkan trafik input untuk service DNS dengan port UDP & TCP
+### Mengizinkan trafik input untuk service DNS dengan port udp & tcp
     
     iptables -A INPUT -p udp --dport 53 --sport 1024:65535 -j ACCEPT
     iptables -A INPUT -p tcp  --dport 53 --sport 1024:65535 -j ACCEPT
@@ -61,6 +61,8 @@ Rules untuk mengelola trafik yang masuk ke Linux Server
 
     iptables -A INPUT -j DROP
 
+---
+
 ## Output Rules
 
 Rules untuk mengelola trafik yang keluar dari Linux Server 
@@ -77,7 +79,7 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
     
     iptables -A OUTPUT -p icmp -j ACCEPT
 
-### Mengizinkan trafik output service DNS dengan port UDP & TCP
+### Mengizinkan trafik output service DNS dengan port udp & tcp
     
     iptables -A OUTPUT -p udp --dport 53 --sport 1024:65535 -j ACCEPT
     iptables -A OUTPUT -p tcp  --dport 53 --sport 1024:65535 -j ACCEPT
@@ -122,6 +124,8 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
 ### Memblokir semua trafik yang keluar dari server
 
     iptables -A OUTPUT -j DROP
+
+---
 
 ## NAT
 
