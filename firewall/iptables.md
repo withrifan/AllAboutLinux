@@ -170,14 +170,14 @@ Konfigurasi NAT pada iptables, agar client-client dari Linux server bisa terkone
 
 ---
 
-## Melihat Rules
+## Show Rules
 Perintah untuk melihat rules yang sudah diterapkan pada iptables
 
     iptables -L
     iptables -nvL
     iptables -L --line-numbers
     iptables -nvL -t nat
-    
+    iptables -nvL -t nat --line-numbers
 
 ---
 
@@ -194,5 +194,9 @@ Perintah untuk menghapus spesifik rules
 
     # menghapus rule berdasarkan chain dan nomor rule
     iptables -D namachain nomorrule
+    iptables -D INPUT 2
 
-
+    # menghapus rule pada rules NAT
+    iptables -nvL -t nat --line-numbers
+    iptables -t nat -D namachain nomorrule
+    iptables -t nat -D POSTROUTING 1
