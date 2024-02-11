@@ -170,6 +170,17 @@ Konfigurasi NAT pada iptables, agar client-client dari Linux server bisa terkone
 
 ---
 
+## Save Rules
+Menyimpan rules agar saat di reboot tidak hilang rulesnya
+
+    iptables-save > /etc/iptables/rules.v4
+
+Merestore file yang tersimpan di rules.v4 
+
+    iptables-restore < /etc/iptables/rules.v4
+
+---
+
 ## Show Rules
 Perintah untuk melihat rules yang sudah diterapkan pada iptables
 
@@ -200,3 +211,9 @@ Perintah untuk menghapus spesifik rules
     iptables -nvL -t nat --line-numbers
     iptables -t nat -D namachain nomorrule
     iptables -t nat -D POSTROUTING 1
+
+---
+
+## Check Trafik Linux
+
+    netstat -tulpn
