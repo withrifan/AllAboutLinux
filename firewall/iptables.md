@@ -48,8 +48,10 @@ Rules untuk mengelola trafik yang masuk ke Linux Server
 
 ### Mengizinkan trafik input untuk service Samba
 
-    iptables -A INPUT -p tcp --dport 445 -j ACCEPT
+    iptables -A INPUT -p tcp --dport 137 -j ACCEPT
+    iptables -A INPUT -p tcp --dport 138 -j ACCEPT
     iptables -A INPUT -p tcp --dport 139 -j ACCEPT
+    iptables -A INPUT -p tcp --dport 445 -j ACCEPT
 
 ### Mengizinkan trafik input untuk service SMTP, IMAP, dan POP3 (Mail server)
 
@@ -62,9 +64,23 @@ Rules untuk mengelola trafik yang masuk ke Linux Server
     iptables -A INPUT -p udp --dport 67 -j ACCEPT
     iptables -A INPUT -p udp --dport 68 -j ACCEPT
 
-### Memblokir semua trafik yang masuk ke server
+### Mengizinkan trafik input untuk service MariaDB/MySQL
+
+    iptables -A INPUT -p tcp --dport 3306 -j ACCEPT
+
+### Rules blokir trafik yang masuk ke server
 
     iptables -A INPUT -j DROP
+    iptables -A INPUT -p icmp -s 192.168.1.2 -j DROP
+    iptables -A INPUT -p icmp -s 192.168.1.0/24 -j DROP
+    iptables -A INPUT -p tcp --dport 22 -m iprange --src-range 192.168.1.2-192.168.1.5 -j DROP
+
+### Spesifik Input Rules
+Misalkan mengizinkan trafik input dari suatu network tertentu untuk mengakses SSH server
+
+    iptables -A INPUT -p tcp -s 192.168.1.2 --dport 22 -j ACCEPT
+    iptables -A INPUT -p tcp -s 192.168.1.0/24 --dport 22 -j ACCEPT
+    iptables -A INPUT -p tcp --dport 22 -m iprange --src-range 192.168.1.6-192.168.1.254 -j ACCEPT
 
 ---
 
@@ -117,8 +133,10 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
 
 ### Mengizinkan trafik output service Samba
 
-    iptables -A OUTPUT -p tcp --sport 445 -j ACCEPT
+    iptables -A OUTPUT -p tcp --sport 137 -j ACCEPT
+    iptables -A OUTPUT -p tcp --sport 138 -j ACCEPT
     iptables -A OUTPUT -p tcp --sport 139 -j ACCEPT
+    iptables -A OUTPUT -p tcp --sport 445 -j ACCEPT
 
 ### Mengizinkan trafik output service DHCP
 
@@ -131,6 +149,10 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
     iptables -A OUTPUT -p tcp --sport 143 -j ACCEPT
     iptables -A OUTPUT -p tcp --sport 110 -j ACCEPT
 
+### Mengizinkan trafik output service MariaDB/MySQL
+
+    iptables -A OUTPUT -p tcp --sport 3306 -j ACCEPT
+
 ### Memblokir semua trafik yang keluar dari server
 
     iptables -A OUTPUT -j DROP
@@ -139,5 +161,38 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
 
 ## NAT
 Konfigurasi NAT pada iptables, agar client-client dari Linux server bisa terkoneksi dengan internet.
+
+    # NAT menggunakan output interface
+    iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+
+    # NAT untuk spesifik network client
+    iptables -t nat -A POSTROUTING -s 192.168.1.0/24 -o enp0s3 -j MASQUERADE
+
+---
+
+## Melihat Rules
+Perintah untuk melihat rules yang sudah diterapkan pada iptables
+
+    iptables -L
+    iptables -nvL
+    iptables -L --line-numbers
+    iptables -nvL -t nat
+    
+
+---
+
+## Delete Rules
+Perintah untuk menghapus semua rules pada iptables
+
+    iptables -X
+    iptables -F
+
+Perintah untuk menghapus spesifik rules
+
+    # lihat nomor rule yang ingin dihapus terlebih dahulu
+    iptables -L --line-numbers
+
+    # menghapus rule berdasarkan chain dan nomor rule
+    iptables -D namachain nomorrule
 
 
