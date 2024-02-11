@@ -57,6 +57,11 @@ Rules untuk mengelola trafik yang masuk ke Linux Server
     iptables -A INPUT -p tcp --dport 143 -j ACCEPT
     iptables -A INPUT -p tcp --dport 110 -j ACCEPT
 
+### Mengizinkan trafik input untuk service DHCP
+
+    iptables -A INPUT -p udp --dport 67 -j ACCEPT
+    iptables -A INPUT -p udp --dport 68 -j ACCEPT
+
 ### Memblokir semua trafik yang masuk ke server
 
     iptables -A INPUT -j DROP
@@ -115,6 +120,11 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
     iptables -A OUTPUT -p tcp --sport 445 -j ACCEPT
     iptables -A OUTPUT -p tcp --sport 139 -j ACCEPT
 
+### Mengizinkan trafik output service DHCP
+
+    iptables -A OUTPUT -p udp --sport 67 -j ACCEPT
+    iptables -A OUTPUT -p udp --sport 68 -j ACCEPT
+
 ### Mengizinkan trafik output service SMTP, IMAP, dan POP3 (Mail server)
 
     iptables -A OUTPUT -p tcp --sport 25 -j ACCEPT
@@ -128,4 +138,6 @@ Rules untuk mengelola trafik yang keluar dari Linux Server
 ---
 
 ## NAT
+Konfigurasi NAT pada iptables, agar client-client dari Linux server bisa terkoneksi dengan internet.
+
 
