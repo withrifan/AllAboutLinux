@@ -50,3 +50,4 @@ Hasilnya ada 2 RAID0 dengan ukuran sekitar 1GB dan 40GB, yang 1 GB kita buat Swa
 - Pada Mount point pilih "/ the root file system"
 - lalu Done setting up a partition
 - lalu Finish partitioning and write changes to disk
+- lalu pilih Yes pada Write the changes to disks
