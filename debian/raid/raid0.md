@@ -1,14 +1,15 @@
 # Install Debian with RAID 0
-Menggunakan beberapa HDD yang digabung menjadi 1, agar menambah kapasitas penyimpanan dan backup data.
+RAID = Menggunakan beberapa HDD yang digabung, agar menambah kapasitas penyimpanan dan backup data.
 
 ## RAID 0
 Misal 2 HDD dengan kapasitas masing-masing 100GB, maka totalnya 200GB. Kelebihan performa read & write lebih cepat, namun kekurangannya jika data di HDD 1 rusak maka data yang disimpan tidak bisa terbaca.
 
 ## Langkah-langkah 
+Misal 2 HDD dengan kapasitas masing-masing 20GB, akan kita bagi menjadi 2 partisi yaitu 1GB swap dan sisanya partisi Root (/)
+
 - Partitioning method = Manual
 - Pilih HDD ke 1 lalu klik Yes pada "Create new empty partition table on this device"
 - Lakukan hal yang sama untuk HDD ke 2
-- Misal 2 HDD dengan kapasitas masing-masing 20GB, akan kita bagi menjadi 2 partisi yaitu 1GB swap dan sisanya partisi Root (/)
 - Pilih Free Space pada HDD ke 1
 - Create a new partition
 - Ubah menjadi 500 MB lalu Continue
@@ -17,7 +18,9 @@ Misal 2 HDD dengan kapasitas masing-masing 100GB, maka totalnya 200GB. Kelebihan
 - Pada bagian Use as pilih "physical volume for RAID"
 - lalu "Done setting up the partition"
 - lakukan hal yang sama untuk HDD ke 2
-- Selanjutnya kita buat partisi yang nantinya akan digunakan oleh Root (/)
+
+Selanjutnya kita buat partisi yang nantinya akan digunakan oleh Root (/)
+
 - Pilih Free Space pada HDD ke 1
 - Create a new partition lalu enter
 - New partition size lalu enter
@@ -42,6 +45,7 @@ Jika pada HDD 1 dan 2 sudah terpartisi raid, selanjutnya kita gabungkan menjadi 
 - Pada "Software RAID configuration actions" pilih Finish
 
 Hasilnya ada 2 RAID0 dengan ukuran sekitar 1GB dan 40GB, yang 1 GB kita buat Swap dan 40GB untuk Root (/)
+
 - Pilih partisi 1GB pada bagian RAID0
 - Pada Use as pilih swap area
 - lalu Done setting up a partition
