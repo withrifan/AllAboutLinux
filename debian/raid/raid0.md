@@ -11,7 +11,7 @@ Misal 2 HDD dengan kapasitas masing-masing 100GB, maka totalnya 200GB. Kelebihan
 - Misal 2 HDD dengan kapasitas masing-masing 20GB, akan kita bagi menjadi 2 partisi yaitu 1GB swap dan sisanya partisi Root (/)
 - Pilih Free Space pada HDD ke 1
 - Create a new partition
-- Ubah menjadi 0.5 GB lalu Continue
+- Ubah menjadi 500 MB lalu Continue
 - Pilih Primary
 - Pilih Beginning
 - Pada bagian Use as pilih "physical volume for RAID"
@@ -41,4 +41,12 @@ Jika pada HDD 1 dan 2 sudah terpartisi raid, selanjutnya kita gabungkan menjadi 
 - tekan Enter
 - Pada "Software RAID configuration actions" pilih Finish
 
-Hasilnya ada 2 RAID0 dengan ukuran 
+Hasilnya ada 2 RAID0 dengan ukuran sekitar 1GB dan 40GB, yang 1 GB kita buat Swap dan 40GB untuk Root (/)
+- Pilih partisi 1GB pada bagian RAID0
+- Pada Use as pilih swap area
+- lalu Done setting up a partition
+- Pilih partisi 40GB pada bagian RAID0
+- Pada Use as pilih Ext4 journaling file system lalu Enter
+- Pada Mount point pilih "/ the root file system"
+- lalu Done setting up a partition
+- lalu Finish partitioning and write changes to disk
