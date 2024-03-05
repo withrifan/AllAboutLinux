@@ -1,15 +1,15 @@
-## Add User in Sudoers
+## Menambahkan User ke Sudoers
 
-login to Root user & install sudo packages
+login menggunakan user Root & install sudo packages
 
     su -
     apt install sudo
 
-add user privilege
+menambahkan user rifan ke grub sudo
 
     usermod -aG sudo rifan
 
-check user
+cek user
 
     groups rifan
     su - rifan
