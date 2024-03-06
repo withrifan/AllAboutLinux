@@ -1,67 +1,67 @@
-konfigurasi ntp server
+## NTP server (ntpsec)
 
-- apt install chrony
-- nano /etc/chrony/chrony.conf
-- server 0.id.pool.ntp.org
-  server 1.id.pool.ntp.org
-  server 2.id.pool.ntp.org
-  server 3.id.pool.ntp.org
+Cek waktu di Debian, pastikan sudah benar timezonenya
 
-allow 192.168.1.0/24
+    timedatectl
 
-- systemctl restart chrony
-- chronyc sources
-- ufw allow 123/udp
+Konfigurasi NTP server menggunakan id.pool.ntp.org dan beri tanda # pada debian ntp
 
-konfigurasi ntp server
+    nano /etc/ntpsec/ntp.conf
 
-- apt install ntp ntpdate
-- nano /etc/ntp.conf
-  server 127.127.1.0
-  fudge 127.127.1.0 stratum 1
-  dan tambahkan pada cryptographically authenticated
-  restrict 192.168.10.0 mask 255.255.255.0 nomodify notrap
-- systemctl restart ntp
-- pengujian ketik ntpq -p
+    pool 0.id.pool.ntp.org
+    pool 1.id.pool.ntp.org
+    pool 2.id.pool.ntp.org
+    pool 3.id.pool.ntp.org
+    server 127.127.1.0
+    fudge 127.127.1.0 stratum 1
 
-konfigurasi ntp server
+Tambahkan di bagian bawah network yang digunakan sebagai sinkronisasi waktu (network Debian server)
 
-- apt install ntp ntpdate
-- nano /etc/ntp.conf
-  server 127.127.1.0
-  fudge 127.127.1.0 stratum 1
-  dan tambahkan pada cryptographically authenticated
-  restrict 192.168.10.0 mask 255.255.255.0 nomodify notrap
-- systemctl restart ntp
-- pengujian ketik ntpq -pn
-- ntpdate -u 192.168.10.1 (diatur di client, ip nya server)
+    restrict 10.10.10.0 mask 255.255.255.0
 
-konfigurasi ntp server
+Restart NTP
 
-- apt install ntpd
-- nano /etc/ntp.conf
-  beri tanda # pada pool 0 sampai pool 3
-  dan tambahkan
-  server 127.127.1.0
-  fudge 127.127.1.0 stratum 1
-  pada cryptographically
-  tambahkan restrict 192.168.10.0 mask 255.255.255.0 nomodify notrap
-- systemctl restart ntp
+    systemctl restart ntpsec
+    systemctl restart ntp
 
-konfigurasi ntp
+Cek NTP
 
-- apt install ntp ntpdate
-- nano /etc/ntp.conf
-  server 127.127.1.0
-  fudge 127.127.1.0 stratum 1
-  dan tambahkan pada cryptographically authenticated
-  restrict 192.168.10.0 mask 255.255.255.0 nomodify notrap
-- systemctl restart ntp
-- pengujian ketik ntpq -p
+    ntpq -pn
 
-- apt install ntp
-- nano /etc/ntp.conf
-  beri # pada pool 0 1 2 3
-  server 127.127.1.0
-  fudge 127.127.1.0 stratum 1
-  restrict 192.168.2.0 mask 255.255.255.0 nomodify notrap
+## NTP server (chrony)
+
+Konfigurasi NTP server menggunakan chrony
+
+    apt install chrony
+
+Tambahkan id.pool.ntp.org dan beri tanda # pada debian pool ntp
+
+    nano /etc/chrony/chrony.conf
+
+    pool 0.id.pool.ntp.org iburst
+    pool 1.id.pool.ntp.org iburst
+    pool 2.id.pool.ntp.org iburst
+    pool 3.id.pool.ntp.org iburst
+
+Pada bagian bawah tambahkan network yang digunakan untuk sinkronisasi waktu (network Debian server)
+
+    allow 10.10.10.0/24
+
+Restart chrony
+
+    systemctl restart chrony
+
+Cek status
+
+    chronyc sources
+
+
+## Pengujian NTP server pada Windows
+
+1. Masuk ke Control Panel
+2. Masuk ke Clock and Regian
+3. Pilih Set the time and date
+4. Masuk ke Internet Time
+5. Change settings
+6. Masukkan domain ntp.withrifan.id
+7. Update now
