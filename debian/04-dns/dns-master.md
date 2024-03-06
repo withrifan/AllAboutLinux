@@ -124,9 +124,48 @@ Lakukan hal yang sama seperti di atas sesuai kebutuhan. Hanya menambahkan IP ser
             also-notify {10.10.10.253;};
     };
 
+---
+
+Menambahkan Name Server untuk DNS master dan DNS slave pada db.domain
+
+    nano /var/cache/bind/db.domain
+
+Tambahkan ns1 untuk server master dan ns2 untuk server slave
+
+    @   IN  NS  ns1.withrifan.id.
+    @   IN  NS  ns1.withrifan.id.
+    ns1 IN  A   10.10.10.254
+    ns2 IN  A   10.10.10.253
+
+---
+
+Menambahkan Reverse untuk DNS master dan DNS slave pada db.ip
+
+    nano /var/cache/bind/db.ip
+
+Tambahkan ns1 untuk server master dan ns2 untuk server slave
+
+    @   IN  NS  ns1.withrifan.id.
+    @   IN  NS  ns1.withrifan.id.
+    254 IN  PTR ns1.withrifan.id.
+    253 IN  PTR ns2.withrifan.id.
+
+---
+
+Restart Bind9
+
+    systemctl restart bind9
+
 Ubah resolv.conf
 
     nano /etc/resolv.conf
 
     nameserver 10.10.10.254
     nameserver 10.10.10.253
+
+Pengujian DNS
+
+    nslookup ns1.withrifan.id
+    nslookup ns2.withrifan.id
+    nslookup 10.10.10.254
+    nslookup 10.10.10.253
