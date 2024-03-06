@@ -43,12 +43,14 @@ Tambahkan id.pool.ntp.org dan beri tanda # pada debian pool ntp
     pool 2.id.pool.ntp.org iburst
     pool 3.id.pool.ntp.org iburst
 
-Pada bagian bawah tambahkan network yang digunakan untuk sinkronisasi waktu (network Debian server)
+Pada bagian bawah tambahkan network yang digunakan untuk sinkronisasi waktu
 
-    allow 10.10.10.0/24
+    allow 10.10.10.0/24 #network Debian
+    allow 172.16.99.0/24 #network client
 
 Restart chrony
 
+    systemctl restart chronyd
     systemctl restart chrony
 
 Cek status
